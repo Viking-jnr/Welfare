@@ -8,15 +8,22 @@ const Signin = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage]= useState('');
+    const [status, setStatus] = useState(null)
 
     {/* Handle Log in*/}
     const handleLogin= (e) => {
         e.preventDefault();
         if (email === 'welfare@gmail.com' && password === '1234') {
             setMessage('Login successful!');
-            navigate("/admin");
+            setStatus('Success');
+            //Delay navigation for 2 seconds
+            setTimeout(()=> {
+                navigate("/admin");
+            }, 2000)
+            
     }   else {
             setMessage('Invalid email or password');
+            setStatus('Failed');
 
     }
     }
@@ -47,7 +54,7 @@ const Signin = () => {
             <Button variant="contained" onClick={handleLogin}
             sx={{textTransform:'none', backgroundColor: 'blue'}}>Log In</Button>
 
-            <Typography color="red">{message}</Typography>
+            <Typography color={status == 'Success'? 'blue': 'red'}>{message}</Typography>
 
         </Box>
     )
