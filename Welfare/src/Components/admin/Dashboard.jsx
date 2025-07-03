@@ -147,11 +147,30 @@ const Header = () => {
             </Toolbar>
         </AppBar>
         )}
-        
+        {!isMobile && (
+            <AppBar position="fixed" sx={{backgroundColor: "cyan", }}>
+                <Toolbar sx={{marginLeft:50}}>
+                    <Box sx={{display:'flex', gap:40}}>
+                <Typography variant="h6" sx={{color:'black'}}>
+                  date 
+                    </Typography> 
+                    <Typography variant="h6" sx={{color:'black'}}>
+                        welcome:username
+                        </Typography>
+                        <Typography variant="h6" sx={{color:'black'}}>
+                            profile
+                            </Typography>
+                            </Box>    
+                </Toolbar>
+            </AppBar>
+        )}
         <Box component={"nav"}>
             <Drawer variant={isMobile ? 'temporary': 'permanent'}
                     open= {isMobile ? openDrawer: true}
-                    onClose={toggleDrawer}>
+                    onClose={toggleDrawer}
+                    sx={{['& .MuiDrawer-paper']:{
+                        backgroundColor: 'cyan'
+                    }}}>
                         {DrawerContent}
                     </Drawer>
         </Box>
