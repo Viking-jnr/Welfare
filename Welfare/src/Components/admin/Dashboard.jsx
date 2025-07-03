@@ -82,55 +82,15 @@ const Header = () => {
         </AppBar>
         )}
         {!isMobile && (
- speed
-            <AppBar position="fixed" sx={{backgroundColor: "cyan", }}>
-                <Toolbar sx={{marginLeft:50}}>
-                    <Box sx={{display:'flex', gap:40}}>
-                <Typography variant="h6" sx={{color:'black'}}>
-                  date 
-                    </Typography> 
-                    <Typography variant="h6" sx={{color:'black'}}>
-                        welcome:username
-                        </Typography>
-                        <Typography variant="h6" sx={{color:'black'}}>
-                            profile
-                            </Typography>
-                            </Box>    
-                </Toolbar>
-            </AppBar>
-        )}
-        <Box component={"nav"} display={'flex'}>
-            <Drawer variant={isMobile ? 'temporary': 'permanent'}
-                    open= {isMobile ? openDrawer: true}
-                    onClose={toggleDrawer}
-                    sx={{['& .MuiDrawer-paper']:{
-                        backgroundColor: 'cyan'
-                    }}}>
-
-            <AppBar position="fixed" sx={{backgroundColor: "cyan", }}>
-                 <Toolbar sx={{marginLeft:50}}>
-                    <Box sx={{display:'flex', gap:40}}>
-                <Typography variant="h6" sx={{color:'black'}}>
-                  date 
-                    </Typography> 
-                    <Typography variant="h6" sx={{color:'black'}}>
-                        welcome:username
-                        </Typography>
-                        <Typography variant="h6" sx={{color:'black'}}>
-                            profile
-                            </Typography>
-                            </Box>    
-                </Toolbar>
+            <AppBar position="fixed" >
+                <Toolbar></Toolbar>
             </AppBar>
         )}
         
         <Box component={"nav"} display={'flex'}>
             <Drawer  variant={isMobile ? 'temporary': 'permanent'}
                     open= {isMobile ? openDrawer: true}
-                    onClose={toggleDrawer} sx={{['& .MuiDrawer-paper']:{
-                        backgroundColor: 'cyan'
-                    }}}>
- main
+                    onClose={toggleDrawer} sx={{zIndex: 1200}}>
                         {DrawerContent}
             </Drawer>
             <Box component={'main'} flexGrow={1} p={isMobile ? 5:10} ml={isMobile ? '10px': '200px'}>
