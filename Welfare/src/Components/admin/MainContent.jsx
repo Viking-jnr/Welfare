@@ -1,4 +1,4 @@
-import { Handshake } from "@mui/icons-material";
+import { Handshake, People } from "@mui/icons-material";
 import { Avatar, Box, Card, CardContent, Paper, Typography } from "@mui/material";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -7,13 +7,13 @@ const Main= () => {
     const Cards= ({icon, title, subtitles}) => {
         return(
         <Card 
-        sx={{width: "20%", backgroundColor: "white", margin: '50px',
-        '&:hover': {transform: "translateY(-10px)", boxShadow: "32px", transition: '0.3s ease-in-out'}}}>
+        sx={{width: "20%", backgroundColor: 'blue', margin: '50px',
+        '&:hover': {transform: "translateY(-10px)", boxShadow: "32px", transition: '0.3s ease-in-out'}, backdropFilter: 'blur(10px)',}}>
             <CardContent>
                 <Box>
                     <Avatar>{icon} </Avatar>
-                    <Typography variant="h5" color="#1E90FF" fontWeight={"bold"}>{title} </Typography>
-                    <Typography variant="body3">{subtitles} </Typography>
+                    <Typography variant="h5" color="white" fontWeight={"bold"}>{title} </Typography>
+                    <Typography variant="body3" color="green">{subtitles} </Typography>
                 </Box>
             </CardContent>
         </Card>
@@ -43,7 +43,7 @@ const Main= () => {
                 <XAxis dataKey={"month"} />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey={'income'} stroke="#1E90FF" strokeWidth={2} 
+                <Line type="monotone" dataKey={'income'} stroke="green" strokeWidth={2} 
                     animationDuration={5000} animationBegin={500} />
             </LineChart>
         </ResponsiveContainer>
@@ -54,7 +54,7 @@ const Main= () => {
                 <Cards title={"Total Contributors"} subtitles={"Yearly"} icon={<Handshake />} />
                 <Cards title={'Total Monthly Contributions'} />
                 <Cards title={'Daily Contributions'} />
-                <Cards title={'Total Members'} />
+                <Cards title={'Total Members'} icon={<People />} />
             </Box>
             <Box sx={{display: 'flex'}}>
                 <Paper sx={{height: 300, width: '100%'}}>
