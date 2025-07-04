@@ -1,21 +1,11 @@
-import { AccountBalance, Close, Dashboard, ExpandLess, ExpandMore, ManageAccounts, Menu, Money, Payment, People,Person, Report } from "@mui/icons-material";
+import { AccountBalance, Close, Dashboard, ExpandLess, ExpandMore, ManageAccounts, Menu, Money, People,Person, Report } 
+from "@mui/icons-material";
 import { AppBar, Avatar, Box, Card, CardContent, Collapse, Drawer, IconButton, List, ListItemButton, 
     ListItemIcon, ListItemText, Toolbar, Typography, useMediaQuery, useTheme } 
     from "@mui/material"
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-
-
-//Styled components
-const styles = 
-       { headerTabs: {
-            '&:hover': {
-                backgroundColor: "#1E90FF",
-                transition: '0.8s ease-in-out',
-            }
-        },
-    }
 
 
 
@@ -28,6 +18,10 @@ const Header = () => {
     {/*Toggle Drawer*/}
     const toggleDrawer= () => {
         setOpenDrawer(!openDrawer);
+    }
+    const HandleClick = ({path}) => {
+        setOpenDrawer(!openDrawer);
+        navigate(path);
     }
     const [userDropDown, setUserDropDown] = useState(false);
     const handleUser = () => {
@@ -62,7 +56,7 @@ const Header = () => {
         <div>
             
             <List>
-                <ListItemButton onClick={() => navigate('/admin')}>
+                <ListItemButton onClick={() => navigate('/admin')} sx={{mt:1}}>
                     <ListItemIcon>{<Dashboard />} </ListItemIcon>
                     <ListItemText primary="Dashboard" />
                 </ListItemButton>
@@ -75,10 +69,10 @@ const Header = () => {
                 {/*Manage Users Dropdown Menu*/}
                 <Collapse in={userDropDown} sx={{pl: 5}} timeout={'auto'} unmountOnExit >
                     <List>
-                        <ListItemButton>
+                        <ListItemButton onClick={()=> navigate('/admin/user')}>
                             <ListItemText primary="Create User" />
                         </ListItemButton>
-                        <ListItemButton>
+                        <ListItemButton onClick={()=> navigate('/admin/edit')}>
                             <ListItemText primary="Edit User" />
                         </ListItemButton>
                     </List>
@@ -152,7 +146,7 @@ const Header = () => {
         {isMobile && (
             <AppBar position="fixed" sx={{backgroundColor: "#4169E1", }}>
             
-            <Toolbar >
+            <Toolbar  >
                 <Box flexGrow={1}>
                     <Typography variant="h5" fontWeight={'bold'}>Welcome</Typography>
                 </Box>
@@ -163,23 +157,27 @@ const Header = () => {
         </AppBar>
         )}
         {!isMobile && (
-            <AppBar position="fixed" sx={{backgroundColor: 'blue'}} >
+            <AppBar position="fixed" sx={{backgroundColor: 'rgb(10, 57, 104)'}} >
                 <Toolbar sx={{display: 'flex', gap: 40}}>
                     <Typography pl={30} color="white">{currentDate} </Typography>
-                    <Typography>Welcome Admin</Typography>
+                    <Typography flex={1}>Welcome Admin</Typography>
                     <Box sx={{display: 'flex', flexDirection: 'row'}}>
-                        <Person /> 
-                        <Typography>Profile</Typography>
+                        <IconButton sx={{backgroundColor: 'rgb(0, 127, 255)'}}>
+                            <Person />
+                        </IconButton>
                     </Box>
                 </Toolbar>
             </AppBar>
         )}
         
-        <Box component={"nav"} display={'flex'}>
+        <Box component={"nav"} display={'flex'} sx={{ minHeight: '100vh'}}>
             <Drawer  variant={isMobile ? 'temporary': 'permanent'}
                     open= {isMobile ? openDrawer: true}
-                    onClose={toggleDrawer} sx={{zIndex: 1100}}>
-                        {DrawerContent}
+                    onClose={toggleDrawer} sx={{zIndex: 1100, '& .MuiDrawer-paper': {
+                        backgroundColor: 'rgb(10, 57, 104)'
+                    }}}>
+                        
+                {DrawerContent}
             </Drawer>
             <Box component={'main'} flexGrow={1} p={isMobile ? 5:10} ml={isMobile ? '10px': '200px'}>
                 <Outlet />
