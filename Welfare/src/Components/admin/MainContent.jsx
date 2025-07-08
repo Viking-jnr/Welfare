@@ -1,11 +1,12 @@
 import { AccountBalance, CalendarMonth, Handshake, Money, Pending, People, TrendingDown, TrendingUp, Wallet } from "@mui/icons-material";
-import { Avatar, Box, Card, CardContent, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, Card, CardActions, CardContent, Divider, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 const Main= () => {
     const theme= useTheme();
-    const isMobile= useMediaQuery(theme.breakpoints.down('md'));
+    const isMobile= useMediaQuery(theme.breakpoints.down('sm'));
+    const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
 
     {/*Animating the width of the lineChart*/}
     const [chartWidth, setChartWidth] = useState('0%');
@@ -19,7 +20,7 @@ const Main= () => {
     }, []);
 
     {/*Reusable function for Cards*/}
-    const Cards= ({icon, title, subtitles, width,data, changeType, change, children}) => {
+    const Cards= ({icon, title, subtitles, width,data, changeType, change, children, color}) => {
         {/* Display Change Icon in only the cards that show change*/}
         var changeIcon;
         if (changeType=== 'increase'){
@@ -27,29 +28,31 @@ const Main= () => {
         } else if (changeType === 'decrease'){
             changeIcon = <TrendingDown />;
         }else {
-            changeIcon = <Box />;
+            changeIcon = null;
         }
         return(
         <Card 
-        sx={{width: {width}, backgroundColor: 'rgb(10, 57, 104)', margin: '50px', borderRadius: 5,
+        sx={{width: {width}, backgroundColor: 'white', margin: '50px', borderRadius: 5, display: 'flex', flexDirection: 'column',
         '&:hover': {transform: "translateY(-10px)", boxShadow: "32px", transition: '0.3s ease-in-out'}, boxShadow: '10px'}}>
-            <CardContent>
+            <CardContent sx={{flex: 1}}>
                 <Box>
                     <Box sx={{display: 'flex', flexDirection: 'row'}}>
                         <Box sx={{display: 'flex', flex: '1'}}>
-                            {icon &&  <Avatar >{icon} </Avatar>}
+                            {icon &&  <Avatar sx={{bgcolor: color}} >{icon} </Avatar>}
                         </Box>
                         <Box sx={{display: 'flex', flexDirection: 'row'}}>
                             <Typography>{changeIcon}</Typography>
-                            <Typography sx={{color: changeType==='increase'? 'white':'red' }}>{change}</Typography>
+                            <Typography sx={{color: changeType==='increase'? 'green':'red' }}>{change}</Typography>
                         </Box>
                     </Box>
-                    <Typography variant="h6" color="white" fontWeight={"bold"}>{title} </Typography>
                     {data && <Typography variant="h3">{data} </Typography>}
+                    <Typography variant="h6" color="green" fontWeight={"bold"}>{title} </Typography>
                     {subtitles && <Typography variant="body3" color="rgb(0, 127, 255)">{subtitles} </Typography>}
                     {children}
+                   
                 </Box>
             </CardContent>
+            <Box sx={{backgroundColor: color, height: '3px', width: '100%'}} />
         </Card>
         )
     }
@@ -92,24 +95,27 @@ const Main= () => {
         ]
     return(
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
-            <Box sx={{display: 'flex', flexDirection: isMobile ? 'column':'row', gap: '5px'}}>
-                <Box sx={{display: 'flex', gap: 1, width:isMobile ? '100%': '50%' }}>
-                    <Cards title={"Total Contributors"} subtitles={"Yearly"} icon={<Handshake />} width={'50%'} data={"50,000+"}
-                           changeType={"increase"} change={"1.2%"} />
-                    <Cards title={'Total Monthly Contributions'} icon={<CalendarMonth />} width={'50%'} data={"100K+"} 
-                        subtitles={"Monthly"}  changeType={"decrease"} change={"0.8%"}/>
+            <Box sx={{display: 'flex', flexDirection: (isMobile || isTablet) ? 'column':'row', gap: '5px'}}>
+                <Box sx={{display: 'flex', gap: 1, width:(isMobile || isTablet) ? '100%': '50%' }}>
+                    <Cards title={"Total Contributors"} subtitles={"vs last month"} icon={<Handshake />} width={'50%'} data={"5,253"}
+                           changeType={"increase"} change={"1.2%"} color={'blue'}/>
+
+                    <Cards title={'Total Monthly Contributions'} icon={<CalendarMonth />} width={'50%'} data={"105,324"} 
+                        subtitles={"vs last month"}  changeType={"decrease"} change={"0.8%"} color={'green'}/>
                 </Box>
-                <Box sx={{display: 'flex', gap: 1, width:isMobile ? '100%': '50%'}}>
-                    <Cards title={'Daily Contributions'} icon={<Wallet />} width={'50%'} data={"30K+"} subtitles={'Daily'}  />
-                    <Cards title={'Total Members'} icon={<People />} width={'50%'} data={'3,456'} />
+                <Box sx={{display: 'flex', gap: 1, width:(isMobile || isTablet) ? '100%': '50%'}}>
+                    <Cards title={'Daily Contributions'} icon={<Wallet />} width={'50%'} data={"12,574"} subtitles={'vs yesterday'} 
+                        changeType={'increase'} change={'1.7%'} color={'purple'}/>
+
+                    <Cards title={'Total Members'} icon={<People />} width={'50%'} data={'3,456'} color={'magenta'} />
                 </Box>
             </Box>
-            <Box sx={{display: 'flex', flexDirection: isMobile ? 'column':'row'}}>
-                <Paper sx={{height: 400, width: chartWidth,p: 3 , backgroundColor: 'rgb(0, 127, 255)', borderRadius: '10px'}}>
+            <Box sx={{display: 'flex', flexDirection: (isMobile || isTablet) ? 'column':'row'}}>
+                <Paper elevation={4} sx={{height: 400, width: chartWidth,p: 3 , borderRadius: '20px'}}>
                     <Typography>Total Monthly Contributions</Typography>
                     <IncomeData />
                 </Paper>
-                <Cards title={'Pending Contributions'} icon={<Pending />} width={isMobile? '80%': '30%'}>
+                <Cards title={'Pending Contributions'} icon={<Pending />} width={(isMobile || isTablet)? '80%': '30%'} color={'red'}>
                     <Table size="small">
                         <TableHead>
                             <TableRow>
@@ -132,8 +138,8 @@ const Main= () => {
                 </Cards>
             </Box>
             <Box sx={{display:'flex'}}>
-                <Cards title={'Total Expenses'} subtitles={'Monthly'} icon={<Money />} />
-                <Cards title={'Total Balance'} subtitles={'From Contributions'} icon={<AccountBalance />}/>
+                <Cards title={'Total Expenses'} subtitles={'Monthly'} icon={<Money />} data={'53,546'} color={'orange'} />
+                <Cards title={'Total Balance'} subtitles={'From Contributions'} icon={<AccountBalance />} data={'51,778'} color={'cyan'}/>
             </Box>
 
         </Box>

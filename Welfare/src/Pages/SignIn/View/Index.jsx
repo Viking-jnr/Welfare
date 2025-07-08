@@ -19,7 +19,7 @@ const Signin = () => {
             //Delay navigation for 2 seconds
             setTimeout(()=> {
                 navigate("/admin");
-            }, 2000)
+            }, 1500)
             
     }   else {
             setMessage('Invalid email or password');

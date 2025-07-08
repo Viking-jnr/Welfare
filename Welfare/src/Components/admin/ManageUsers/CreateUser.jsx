@@ -1,6 +1,15 @@
+import { Box, Tab, Tabs } from "@mui/material";
+import { useState } from "react";
+
 const Users = ()=>{
+    const [activeTab, setActiveTab] = useState(0);
     return(
-        <h1>Create User...</h1>
+        <Box>
+            <Tabs>
+                <Tab label="Create User" />
+                <Tab label="Edit User" />
+            </Tabs>
+        </Box>
     )
 }
 
