@@ -45,7 +45,7 @@ const Signin = () => {
 >
            
 
-            <Typography variant="h4"color="blue">Log In</Typography>
+            <Typography variant="h4"color="blue" fontWeight={'bold'}>Log In</Typography>
             <TextField label="Email" type="email" value={email} required onChange={(e) => setEmail(e.target.value)} />
             
             <TextField label="Password" type="password" value={password}  required 
