@@ -21,7 +21,7 @@ const Header = () => {
         setOpenDrawer(!openDrawer);
     }
     {/*To determine the user name*/}
-    const [userName, setUserName] = useState("User");
+    const [userName, setUserName] = useState("Admin");
     const [userDropDown, setUserDropDown] = useState(false);
     const handleUser = () => {
         setUserDropDown(!userDropDown);

@@ -80,8 +80,7 @@ const Main= () => {
                 <XAxis dataKey={"month"} />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey={'income'} stroke="green" strokeWidth={2} 
-                    animationDuration={5000} animationBegin={500}  />
+                <Line type="monotone" dataKey={'income'} stroke="green" strokeWidth={2} animationBegin={200} animationEasing="ease-in-out" animationDuration={1000} />
             </LineChart>
         </ResponsiveContainer>
         );
@@ -95,6 +94,7 @@ const Main= () => {
         ]
     return(
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            {/*Dashboard Cards*/}
             <Box sx={{display: 'flex', flexDirection: (isMobile || isTablet) ? 'column':'row', gap: '5px'}}>
                 <Box sx={{display: 'flex', gap: 1, width:(isMobile || isTablet) ? '100%': '50%' }}>
                     <Cards title={"Total Contributors"} subtitles={"vs last month"} icon={<Handshake />} width={'50%'} data={"5,253"}
@@ -110,8 +110,9 @@ const Main= () => {
                     <Cards title={'Total Members'} icon={<People />} width={'50%'} data={'3,456'} color={'magenta'} />
                 </Box>
             </Box>
+            {/*Dashboard Graph*/}
             <Box sx={{display: 'flex', flexDirection: (isMobile || isTablet) ? 'column':'row'}}>
-                <Paper elevation={4} sx={{height: 400, width: chartWidth,p: 3 , borderRadius: '20px'}}>
+                <Paper elevation={4} sx={{height: 400, width: '100%',p: 3 , borderRadius: '20px'}}>
                     <Typography>Total Monthly Contributions</Typography>
                     <IncomeData />
                 </Paper>
