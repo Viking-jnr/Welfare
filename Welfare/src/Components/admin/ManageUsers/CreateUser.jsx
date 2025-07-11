@@ -1,9 +1,10 @@
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, LineAxisOutlined } from "@mui/icons-material";
 import { Avatar, Box, Button, Divider, Grid, IconButton, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { addDoc, collection } from "firebase/firestore";
 import { useState } from "react";
 import { db, storage } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import axios from "axios";
 
 const Users = ()=>{
     {/*Component to create new user*/}
@@ -104,6 +105,25 @@ const Users = ()=>{
         }
 
     };
+    const handleSave = async () => {
+       
+        const userPayload = {
+            fullName: user.fullName,
+            PhoneNo: user.PhoneNO,
+            location: user.Location,
+            fieldOfficer: user.FieldOfficer,
+            profilePicURL: user.ProfilePicture,
+            newDependent: user.newDependent,
+        };
+
+        try {
+            await axios.post("http://localhost:4000/users", userPayload);
+            alert("User Saved to MySQL!");
+
+        } catch(err) {
+            console.error("save Failed:", err);
+        }
+    };
 
 
 
@@ -184,7 +204,7 @@ const Users = ()=>{
             ))}
             <Button startIcon={<Add />} onClick={addDependents}>Add Dependent</Button>
             <Divider sx={{my: 5}} />
-            <Button variant="contained" onClick={saveUser}>Save User</Button>
+            <Button variant="contained" onClick={handleSave}>Save User</Button>
         </Box>
     )
 }
