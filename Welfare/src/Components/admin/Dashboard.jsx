@@ -83,6 +83,9 @@ const Header = () => {
                         <ListItemButton onClick={()=> {navigate('/admin/edit'); toggleDrawer();}}>
                             <ListItemText primary="Edit User" />
                         </ListItemButton>
+                        <ListItemButton onClick={()=> {navigate('/admin/view'); toggleDrawer();}}>
+                            <ListItemText primary="View User" />
+                        </ListItemButton>
                     </List>
                 </Collapse>
                 {/*Manage Accounts*/}

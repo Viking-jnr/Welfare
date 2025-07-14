@@ -1,7 +1,7 @@
-const Edit = ()=>{
+const EditUser = ()=>{
     return(
-        <h1>Edit User...</h1>
+        <h1>EditUser...</h1>
     )
 }
 
-export default Edit;
+export default EditUser;
