@@ -1,13 +1,10 @@
-import { Add, Delete, LineAxisOutlined } from "@mui/icons-material";
-import { Avatar, Box, Button, Divider, Grid, IconButton, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
-import { addDoc, collection } from "firebase/firestore";
+import { Add, Delete } from "@mui/icons-material";
+import { Avatar, Box, Button, Divider, Grid, IconButton, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { db, storage } from "../../../firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import axios from "axios";
 
 const Users = ()=>{
-    {/*Component to create new user*/}
+    //Component to create new user
     const [user, setUser] = useState({
         fullName: "",
         IDno: "",
@@ -61,64 +58,35 @@ const Users = ()=>{
         setDependents(updated);
     };
     {/*Function to save user*/}
-    const saveUser = async () => {
-        try {
-            //Convert profile picture into a downloadable URL to be stored by firebase
-            let profilePicUrl = "";
-            if (user.ProfilePicture){
-                const picRef = ref(storage, `ProfilePictures/${user.fullName}-${Date.now()}`);
-                await uploadBytes(picRef, user.ProfilePicture);
-                profilePicUrl = await getDownloadURL(picRef)
-            }
-            //handle dependent profile pic if given
-            const updatedDependents = await Promise.all(
-                
-                dependents.map(async (dep, index) => {
-                    let depPicUrl = "";
-
-                    if (dep.profile) {
-                    const depRef = ref(storage, `DependentPictures/${user.fullName}-dep${index}-${Date.now()}`);
-                    await uploadBytes(depRef, dep.profile);
-                    depPicUrl = await getDownloadURL(depRef);
-                    }
-
-                    return {
-                    ...dep,
-                    profile: depPicUrl, // replace File with its URL
-                    };
-                })
-                );
-            //Update user data with the downloadable profile pic
-            const newUser = {
-                ...user,
-                ProfilePicture: profilePicUrl,
-                newDependent: updatedDependents,
-                };
-
-            await addDoc(collection(db, "Users"), newUser);
-            alert("User Saved Successfully");
-            //clear form
-            setUser({fullName: "", IDno: "", PhoneNO: "",Location: "", FieldOfficer: "", ProfilePicture: null, newDependent: []})
-            setDependents([{ profile: null, Name: "", relationship: "", DOB: "", ID: "" }]);
-        } catch (err){
-            console.error("Error Saving User:", err)
-        }
-
-    };
-    const handleSave = async () => {
+    
+    const handleSave = async (e) => {
+        e.preventDefault()
        
-        const userPayload = {
-            fullName: user.fullName,
-            PhoneNo: user.PhoneNO,
-            location: user.Location,
-            fieldOfficer: user.FieldOfficer,
-            profilePicURL: user.ProfilePicture,
-            newDependent: user.newDependent,
-        };
+        const formData = new FormData();
+        formData.append('fullName', user.fullName);
+        formData.append('IDNo', user.IDno);
+        formData.append('PhoneNo', user.PhoneNO);
+        formData.append('location', user.Location);
+        formData.append('fieldOfficer', user.FieldOfficer);
+        { user.ProfilePicture && formData.append('profile', user.ProfilePicture);}
+        formData.append('dependents', JSON.stringify(user.newDependent));
 
         try {
-            await axios.post("http://localhost:4000/users", userPayload);
+            await axios.post("http://localhost:4000/users", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             alert("User Saved to MySQL!");
+            setUser({
+                fullName: "",
+                IDno: "",
+                PhoneNO: "",
+                Location: "",
+                FieldOfficer: "",
+                ProfilePicture: null,
+                newDependent: []
+            });
 
         } catch(err) {
             console.error("save Failed:", err);
@@ -128,7 +96,7 @@ const Users = ()=>{
 
 
     return(
-        <Box sx={{ p: 4, mx: 'auto',display: 'flex',flexDirection: 'column', gap: 2}}>
+        <Box sx={{ p: 4, mx: 'auto',display: 'flex',flexDirection: 'column', gap: 2, width: '100%'}}>
             <Typography variant="h5" gutterBottom>Create New User</Typography>
             <Stack  direction={'row'} gap={2}>
                 <Avatar  src={user.ProfilePicture ? URL.createObjectURL(user.ProfilePicture): ''} />
@@ -139,13 +107,13 @@ const Users = ()=>{
             </Stack>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <TextField label="Full Name" fullWidth value={user.fullName} required onChange={e => setUser({...user, fullName: e.target.value})} />
+                    <TextField label="Full Name" fullWidth value={user.fullName} required onChange={e => setUser(prev => ({...prev, fullName: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField label="National ID Number" fullWidth value={user.IDno} onChange={e => setUser({...user, IDno: e.target.value})} />
+                    <TextField label="National ID Number" fullWidth value={user.IDno}  onChange={e => setUser(prev => ({...prev, IDno: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField  label="Phone No" fullWidth value={user.PhoneNO} onChange={e => setUser({...user, PhoneNO: e.target.value})} />
+                    <TextField  label="Phone No" fullWidth value={user.PhoneNO} onChange={e => setUser(prev => ({...prev, PhoneNO: e.target.value})) }/>
                 </Grid>
                 <Grid item xs={12}>
                     <Select displayEmpty  label="Location"  value={user.Location} onChange={e => {
@@ -168,7 +136,7 @@ const Users = ()=>{
             <Typography variant="h5" gutterBottom>Dependents</Typography>
             {dependents.map((item, index)=>(
                 <Box key={index} sx={{display: 'flex', gap: 2}}>
-                    <Avatar key={index}  src={item.profile ? URL.createObjectURL(item.profile): ''} />
+                    <Avatar src={item.profile ? URL.createObjectURL(item.profile): ''} />
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField label="Name" fullWidth value={item.Name} onChange={(e)=> handleDependentChange(index, 'Name', e.target.value)} />
