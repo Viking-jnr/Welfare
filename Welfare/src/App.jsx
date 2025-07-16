@@ -13,6 +13,7 @@ import View from './Components/admin/BookofAccounts/View'
 import Payments from './Components/admin/BookofAccounts/Payments'
 import Accounts from './Components/admin/BookofAccounts/Accounts'
 import Reports from './Components/admin/Reports'
+import ViewUsers from './Components/admin/ManageUsers/ViewUsers'
 
 function App() {
 
@@ -24,7 +25,8 @@ function App() {
       <Route path="/admin" element={<Admin />} >
         <Route index element={<Dashboard />} />
         <Route path="/admin/user" element={<Users />} />
-        <Route path='/admin/edit' element={<Edit />} />
+        <Route path='/admin/user/edit/:id' element={<Edit />} />
+        <Route path='/admin/view' element={<ViewUsers />} />
         <Route path='/admin/create-account' element={<CreateAccount />} />
         <Route path='/admin/edit-account' element={<EditAccount />} />
         <Route path='/admin/create-expense' element={<CreateExpense />} />

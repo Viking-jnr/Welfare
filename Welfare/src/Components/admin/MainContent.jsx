@@ -93,7 +93,7 @@ const Main= () => {
             {name: "Catherine Mutheu", amount: 8300},
         ]
     return(
-        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', width: '100%'}}>
             {/*Dashboard Cards*/}
             <Box sx={{display: 'flex', flexDirection: (isMobile || isTablet) ? 'column':'row', gap: '5px'}}>
                 <Box sx={{display: 'flex', gap: 1, width:(isMobile || isTablet) ? '100%': '50%' }}>

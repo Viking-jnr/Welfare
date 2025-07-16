@@ -1,6 +1,6 @@
 import { AccountBalance, Close, Dashboard, ExitToApp, ExpandLess, ExpandMore, ManageAccounts, Menu as MenuIcon, Money, People,Person, Report } 
 from "@mui/icons-material";
-import { AppBar, Avatar, Box, Collapse, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon,
+import { AppBar, Box, Collapse, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon,
      ListItemText, Menu, MenuItem, Toolbar, Typography, useMediaQuery, useTheme } 
     from "@mui/material"
 import { useEffect, useState } from "react";
@@ -80,9 +80,10 @@ const Header = () => {
                         <ListItemButton onClick={()=> {navigate('/admin/user'); toggleDrawer();}}>
                             <ListItemText primary="Create User" />
                         </ListItemButton>
-                        <ListItemButton onClick={()=> {navigate('/admin/edit'); toggleDrawer();}}>
-                            <ListItemText primary="Edit User" />
+                        <ListItemButton onClick={()=> {navigate('/admin/view'); toggleDrawer();}}>
+                            <ListItemText primary="View Users" />
                         </ListItemButton>
+                        
                     </List>
                 </Collapse>
                 {/*Manage Accounts*/}
