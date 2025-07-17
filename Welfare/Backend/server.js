@@ -12,9 +12,13 @@ app.get("/", (req, res) => {
   res.json("Welcome to the Welfare Backend API");
 });
 
+const fs = require('fs');
 const path = require("path");
-app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const uploadPath = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath);
+}
+
 
 
 const userRoutes = require("./routes/users");

@@ -72,7 +72,7 @@ const Users = ()=>{
         formData.append('dependents', JSON.stringify(user.newDependent));
 
         try {
-            await axios.post("http://localhost:4000/users", formData, {
+            await axios.post("https://welfare-th1o.onrender.com/users", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

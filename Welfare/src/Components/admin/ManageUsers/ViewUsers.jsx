@@ -18,7 +18,7 @@ const View = () => {
     useEffect (() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/users');
+                const response = await axios.get('https://welfare-th1o.onrender.com/users');
                 setViewUser(response.data);
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -31,7 +31,7 @@ const View = () => {
     //function to delete user
     const handleDelete = async (id) => {
         try {
-            await axios.delete("http://localhost:4000/users/" + id);
+            await axios.delete("https://welfare-th1o.onrender.com/users/" + id);
             window.location.reload();
         }catch(err){
             console.log(err);
@@ -55,7 +55,7 @@ const View = () => {
               <TableBody>
                 {viewUser.map((user) => (
                     <TableRow key={user.id}>
-                        <TableCell><Avatar src={`http://localhost:4000/${user.profilePic_URL}`} /> </TableCell>
+                        <TableCell><Avatar src={`https://welfare-th1o.onrender.com/${user.profilePic_URL}`} /> </TableCell>
                         <TableCell>{user.FullName}</TableCell>
                         <TableCell>{user.IDNo}</TableCell>
                         <TableCell>{user.PhoneNo}</TableCell>
