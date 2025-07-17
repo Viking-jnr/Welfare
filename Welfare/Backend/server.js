@@ -12,9 +12,9 @@ app.get("/", (req, res) => {
   res.json("Welcome to the Welfare Backend API");
 });
 
-//const path = require("path");
-//app.use(express.urlencoded({ extended: true }));
-//app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const path = require("path");
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 const userRoutes = require("./routes/users");
