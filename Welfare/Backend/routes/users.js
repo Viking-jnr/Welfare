@@ -53,21 +53,14 @@ router.post("/", upload.single("profile"), async (req, res) => {
 });
 
 // Get all users
-/*router.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM users');
     res.json(result.rows);
   } catch (err) {
     res.status(500).json(err);
   }
-});*/
-router.get("/", (req, res)=>{
-  const q = "SELECT * FROM users";
-  db.query(q,(err, data) =>{
-    if (err) return res.json(err);
-    return res.json(data);
-  })
-})
+});
 
 // Delete a user
 router.delete("/:id", async (req, res) => {
