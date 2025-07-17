@@ -1,23 +1,27 @@
 import { Add, Delete } from "@mui/icons-material";
 import { Avatar, Box, Button, Divider, Grid, IconButton, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useLocation} from "react-router-dom";
+import { useLocation, useParams} from "react-router-dom";
 import axios from "axios";
 
 const Edit = ()=>{
     const location= useLocation();
     const userID = location.pathname.split('/')[4];
-    
+    const { id } = useParams();
     //Component to create new user
-    const [user, setUser] = useState({
-        fullName: "",
-        IDno: "",
-        PhoneNO: "",
-        Location: "",
-        FieldOfficer: "",
-        ProfilePicture: null,
-        newDependent: []
-    });
+    const [user, setUser] = useState(null);
+    const [dependents, setDependents] = useState([]);
+
+    //To get user info
+    useEffect(() => {
+        axios.get(`https://welfare-th1o.onrender.com/users/${id}`)
+        .then(res => setUser(res.data));
+
+        //To get dependents data
+        axios.get(`https://welfare-th1o.onrender.com/users${id}/dependents`)
+        .then(res => setDependents(res.data));
+
+    }, [id])
     //A dictionary of locations with assigned field officers
     const locations = {
         Westlands: 'Officer A',
@@ -33,9 +37,7 @@ const Edit = ()=>{
         }
     }
     {/*Component to add dependents if any*/}
-    const [dependents, setDependents] = useState([
-        {profile: null, Name: '', relationship: '', DOB: '',ID: ''},
-    ]);
+    
     const handleDependentChange = (index, field, value) => {
         const dep = [...dependents];
         dep[index][field] = value;
@@ -76,7 +78,7 @@ const Edit = ()=>{
         formData.append('dependents', JSON.stringify(user.newDependent));
 
         try {
-            await axios.put("http://localhost:4000/users/"+ userID, formData, {
+            await axios.put("https://welfare-th1o.onrender.com/users"+ userID, formData, {
                 headers: {
                     'Content-Type': 'multipart.form-data'
                 }
@@ -87,26 +89,14 @@ const Edit = ()=>{
             console.error("save Failed:", err);
         }
     };
-
-    const [viewUser, setViewUser] = useState([]);
-        useEffect (() => {
-            const fetchUsers = async () => {
-                try {
-                    const response = await axios.get('http://localhost:4000/users');
-                    setViewUser(response.data);
-                } catch (error) {
-                    console.error("Error fetching users:", error);
-                }
-            }
-            fetchUsers();
     
-        }, []);
+    
 
 
 
     return(
         <Box sx={{ p: 4, mx: 'auto',display: 'flex',flexDirection: 'column', gap: 2}}>
-            <Typography variant="h5" gutterBottom>Edit User</Typography>
+            <Typography variant="h5" gutterBottom>Edit {user?.FullName} </Typography>
             <Stack  direction={'row'} gap={2}>
                 <Avatar  src={user.ProfilePicture ? URL.createObjectURL(user.ProfilePicture): ''} />
                 <Button variant="contained" component='label' >

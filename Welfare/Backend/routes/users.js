@@ -93,4 +93,17 @@ router.put("/:id", upload.single("profile"), async (req, res) => {
   }
 });
 
+//To get a user with a specific ID
+router.get("/:id", async (req, res) => {
+  const userID = req.params.id;
+  const result = await db.query("SELECT FROM users where id =$1", [userID]);
+  res.json(result.rows[0]);
+});
+//To get dependents for a user
+router.get("/:id/dependents", async (req, res) => {
+  const userID = req.params.id;
+  const result = await db.query("SELECT * FROM dependents where 'userID' = $1 ", [userID]);
+  res.json(result.rows);
+});
+
 module.exports = router;

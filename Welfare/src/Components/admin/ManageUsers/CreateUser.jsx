@@ -2,8 +2,10 @@ import { Add, Delete } from "@mui/icons-material";
 import { Avatar, Box, Button, Divider, Grid, IconButton, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Users = ()=>{
+    const navigate = useNavigate();
     //Component to create new user
     const [user, setUser] = useState({
         fullName: "",
@@ -87,6 +89,7 @@ const Users = ()=>{
                 ProfilePicture: null,
                 newDependent: []
             });
+            navigate("/admin/view")
 
         } catch(err) {
             console.error("save Failed:", err);
