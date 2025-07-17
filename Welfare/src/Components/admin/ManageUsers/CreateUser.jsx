@@ -77,7 +77,7 @@ const Users = ()=>{
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            alert("User Saved to MySQL!");
+            alert("User Saved Successfully");
             setUser({
                 fullName: "",
                 IDno: "",

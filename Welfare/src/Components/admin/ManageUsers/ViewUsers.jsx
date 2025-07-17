@@ -55,7 +55,7 @@ const View = () => {
               <TableBody>
                 {viewUser.map((user) => (
                     <TableRow key={user.id}>
-                        <TableCell><Avatar src={`https://welfare-th1o.onrender.com/${user.profilePic_URL}`} /> </TableCell>
+                        <TableCell><Avatar src={user.profilePic_URL} /> </TableCell>
                         <TableCell>{user.FullName}</TableCell>
                         <TableCell>{user.IDNo}</TableCell>
                         <TableCell>{user.PhoneNo}</TableCell>
