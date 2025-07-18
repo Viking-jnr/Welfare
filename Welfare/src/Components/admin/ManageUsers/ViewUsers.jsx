@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Avatar, Box, Button, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Avatar, Box, Button, Collapse, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 //Styled Components
@@ -36,6 +36,12 @@ const View = () => {
             console.log(err);
         }
     }
+
+    //Component to set collapsible dropdown for Viewing dependents
+    const [extendedUser, setExtendedUser] = useState(null);
+    const handleExtent = (userID) => {
+        setExtendDep(prev =>(prev === userID ? null: userID) );
+    };
     return(
         <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', gap: '60px'}}>
             <Typography variant='h3' sx={{color: 'blue'}}>Mjambere Welfare Users</Typography>
@@ -69,9 +75,17 @@ const View = () => {
                             <Button variant='contained' sx={{backgroundColor: 'rgba(248, 32, 32, 1)'}} onClick={() => handleDelete(user.id)}>
                                 Delete
                             </Button> 
+
+                            <Button variant='contained' onClick={handleExtent} >
+                               View Dependents
+                            </Button> 
                         </TableCell>
                     </TableRow>
+                    {extendDep && (
+                        <TableRow
+                    )}
                 ))}
+                
               </TableBody>
             </Table>
           </TableContainer>
