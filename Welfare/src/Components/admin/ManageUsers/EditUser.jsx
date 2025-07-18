@@ -26,6 +26,9 @@ const Edit = ()=>{
                 ProfilePicture: null,
                 newDependents: []
             });
+        })
+        .catch(err => {
+            console.error("Error fetching user:", err);
         });
 
         //To get dependents data

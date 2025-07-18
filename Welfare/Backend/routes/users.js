@@ -98,14 +98,14 @@ router.get("/:id", async (req, res) => {
   try{
   const userID = req.params.id;
   console.log("Fetching user with ID", userID);// debug userID
-  const result = await db.query("SELECT FROM users where id =$1", [userID]);
+  const result = await db.query("SELECT * FROM users where id =$1", [userID]);
 
   if (result.rows.length ===0){
     return res.status(404).json({error: "User Not Found"});
   }
 
   console.log("Fetched User:", result.rows[0]); //view fetched user in log
-  
+
   res.status(200).json(result.rows[0]);
   }catch(err){
     console.error("Failed to get user:", err);
