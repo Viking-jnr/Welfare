@@ -56,8 +56,18 @@ router.post("/", upload.single("profile"), async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM users');
-    res.json(result.rows);
+    const userPlusDependents = await Promise.all(
+      result.rows.map(async (user) => {
+        const dependentsResult = await db.query("SELECT * FROM dependents where id = $1", [user.id]);
+        
+        return {
+          ...user, dependents: dependentsResult.rows
+        };
+      })
+    )
+    res.json(userPlusDependents);
   } catch (err) {
+    console.error("Error fetching users and Dependents", err);
     res.status(500).json(err);
   }
 });

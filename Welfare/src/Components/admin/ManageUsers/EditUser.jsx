@@ -1,15 +1,23 @@
 import { Add, Delete } from "@mui/icons-material";
 import { Avatar, Box, Button, Divider, Grid, IconButton, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useLocation, useParams} from "react-router-dom";
+import { useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 
 const Edit = ()=>{
+    const navigate= useNavigate();
     const location= useLocation();
     const userID = location.pathname.split('/')[4];
-    const { id } = useParams();
     //Component to create new user
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({
+        fullName: '',
+        IDno: '',
+        PhoneNo: '',
+        Location: '',
+        FieldOfficer: '',
+        ProfilePicture: null,
+        newDependent: []
+    });
     const [dependents, setDependents] = useState([]);
 
     //To get user info
@@ -23,8 +31,8 @@ const Edit = ()=>{
                 PhoneNo: raw.PhoneNo,
                 Location: raw.Location,
                 FieldOfficer: raw.FieldOfficer,
-                ProfilePicture: null,
-                newDependents: []
+                ProfilePicture: raw.profilePic_URL || null,
+                newDependent: raw.dependents || []
             });
         })
         .catch(err => {
@@ -44,10 +52,12 @@ const Edit = ()=>{
         Langata: 'Officer D',
         Kiambu: 'Officer E'
     }
+    const [preview, setPreview] = useState(null);
     const handleProfilePic =(e) => {
         const file = e.target.files[0];
         if (file){
-        setUser(prev => ({...prev, ProfilePicture: file}))
+        setUser(prev => ({...prev, ProfilePicture: file}));
+        setPreview(URL.createObjectURL(file));
         }
     }
     {/*Component to add dependents if any*/}
@@ -85,10 +95,11 @@ const Edit = ()=>{
         const formData = new FormData();
         formData.append('fullName', user.fullName);
         formData.append('IDNo', user.IDno);
-        formData.append('PhoneNo', user.PhoneNO);
+        formData.append('PhoneNo', user.PhoneNo);
         formData.append('location', user.Location);
         formData.append('fieldOfficer', user.FieldOfficer);
         { user.ProfilePicture && formData.append('profile', user.ProfilePicture);}
+        console.log("Dependents:", user.newDependent)
         formData.append('dependents', JSON.stringify(user.newDependent));
 
         try {
@@ -98,6 +109,16 @@ const Edit = ()=>{
                 }
             });
             alert("Changes Saved Successfully");
+            setUser({
+                fullName: "",
+                IDno: "",
+                PhoneNO: "",
+                Location: "",
+                FieldOfficer: "",
+                ProfilePicture: null,
+                newDependent: []
+            });
+            navigate("/admin/view")
 
         } catch(err) {
             console.error("save Failed:", err);
@@ -112,7 +133,7 @@ const Edit = ()=>{
         <Box sx={{ p: 4, mx: 'auto',display: 'flex',flexDirection: 'column', gap: 2}}>
             <Typography variant="h5" gutterBottom>Edit {user?.fullName} </Typography>
             <Stack  direction={'row'} gap={2}>
-                <Avatar  src={user?.ProfilePicture ? URL.createObjectURL(user.ProfilePicture): user?.ProfilePictureURL || ''} />
+                <Avatar  src={ preview || (user?.ProfilePicture ?? null) } />
                 <Button variant="contained" component='label' >
                     Upload Profile Picture
                    <input type="file" hidden onChange={handleProfilePic} />
@@ -120,13 +141,13 @@ const Edit = ()=>{
             </Stack>
             <Grid container spacing={2}>
                 <Grid item >
-                    <TextField label="Full Name" fullWidth value={user?.fullName}  required onChange={e => setUser(prev => ({...prev, fullName: e.target.value}))} />
+                    <TextField  fullWidth value={user?.fullName}  required onChange={e => setUser(prev => ({...prev, fullName: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField label="National ID Number" fullWidth value={user?.IDno}  onChange={e => setUser(prev => ({...prev, IDno: e.target.value}))} />
+                    <TextField  fullWidth value={user?.IDno}  onChange={e => setUser(prev => ({...prev, IDno: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField  label="Phone No" fullWidth value={user?.PhoneNO} onChange={e => setUser(prev => ({...prev, PhoneNO: e.target.value})) }/>
+                    <TextField  fullWidth value={user?.PhoneNo} onChange={e => setUser(prev => ({...prev, PhoneNO: e.target.value})) }/>
                 </Grid>
                 <Grid item xs={12}>
                     <Select displayEmpty  label="Location"  value={user?.Location ?? ''} onChange={e => {
@@ -140,7 +161,7 @@ const Edit = ()=>{
                     </Select>
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField  label="Assigned Field Officer" fullWidth InputProps={{readOnly: true}} value={user?.FieldOfficer} onChange={e => setUser({...user, FieldOfficer: e.target.value})} />
+                    <TextField  fullWidth InputProps={{readOnly: true}} value={user?.FieldOfficer} onChange={e => setUser({...user, FieldOfficer: e.target.value})} />
                 </Grid>
                 
             </Grid>
@@ -183,6 +204,7 @@ const Edit = ()=>{
                     </Grid>
                 </Box>
             ))}
+        
             <Button startIcon={<Add />} onClick={addDependents}>Add Dependent</Button>
             <Divider sx={{my: 5}} />
             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
