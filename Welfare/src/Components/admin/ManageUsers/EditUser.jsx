@@ -14,14 +14,25 @@ const Edit = ()=>{
 
     //To get user info
     useEffect(() => {
-        axios.get(`https://welfare-th1o.onrender.com/users/${id}`)
-        .then(res => setUser(res.data));
+        axios.get(`https://welfare-th1o.onrender.com/users/${userID}`)
+        .then(res => {
+            const raw = res.data;
+            setUser({
+                fullName: raw.FullName,
+                IDno: raw.IDNo,
+                PhoneNo: raw.PhoneNo,
+                Location: raw.Location,
+                FieldOfficer: raw.FieldOfficer,
+                ProfilePicture: null,
+                newDependents: []
+            });
+        });
 
         //To get dependents data
-        axios.get(`https://welfare-th1o.onrender.com/users${id}/dependents`)
+        axios.get(`https://welfare-th1o.onrender.com/users/${userID}/dependents`)
         .then(res => setDependents(res.data));
 
-    }, [id])
+    }, [userID])
     //A dictionary of locations with assigned field officers
     const locations = {
         Westlands: 'Officer A',
@@ -45,7 +56,7 @@ const Edit = ()=>{
     };
     const addDependents = () => {
         const lastDep = dependents[dependents.length-1];
-        if (lastDep.Name && lastDep.relationship){
+        if (lastDep?.Name && lastDep?.relationship){
             setUser(prev =>({
                 ...prev, newDependent: [...prev.newDependent, lastDep],
             }));
@@ -78,12 +89,12 @@ const Edit = ()=>{
         formData.append('dependents', JSON.stringify(user.newDependent));
 
         try {
-            await axios.put("https://welfare-th1o.onrender.com/users"+ userID, formData, {
+            await axios.put("https://welfare-th1o.onrender.com/users/"+ userID, formData, {
                 headers: {
                     'Content-Type': 'multipart.form-data'
                 }
             });
-            alert("User Saved to MySQL!");
+            alert("Changes Saved Successfully");
 
         } catch(err) {
             console.error("save Failed:", err);
@@ -96,9 +107,9 @@ const Edit = ()=>{
 
     return(
         <Box sx={{ p: 4, mx: 'auto',display: 'flex',flexDirection: 'column', gap: 2}}>
-            <Typography variant="h5" gutterBottom>Edit {user?.FullName} </Typography>
+            <Typography variant="h5" gutterBottom>Edit {user?.fullName} </Typography>
             <Stack  direction={'row'} gap={2}>
-                <Avatar  src={user.ProfilePicture ? URL.createObjectURL(user.ProfilePicture): ''} />
+                <Avatar  src={user?.ProfilePicture ? URL.createObjectURL(user.ProfilePicture): user?.ProfilePictureURL || ''} />
                 <Button variant="contained" component='label' >
                     Upload Profile Picture
                    <input type="file" hidden onChange={handleProfilePic} />
@@ -106,27 +117,27 @@ const Edit = ()=>{
             </Stack>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <TextField label="Full Name" fullWidth value={user.fullName}  required onChange={e => setUser(prev => ({...prev, fullName: e.target.value}))} />
+                    <TextField label="Full Name" fullWidth value={user?.fullName}  required onChange={e => setUser(prev => ({...prev, fullName: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField label="National ID Number" fullWidth value={user.IDno}  onChange={e => setUser(prev => ({...prev, IDno: e.target.value}))} />
+                    <TextField label="National ID Number" fullWidth value={user?.IDno}  onChange={e => setUser(prev => ({...prev, IDno: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField  label="Phone No" fullWidth value={user.PhoneNO} onChange={e => setUser(prev => ({...prev, PhoneNO: e.target.value})) }/>
+                    <TextField  label="Phone No" fullWidth value={user?.PhoneNO} onChange={e => setUser(prev => ({...prev, PhoneNO: e.target.value})) }/>
                 </Grid>
                 <Grid item xs={12}>
-                    <Select displayEmpty  label="Location"  value={user.Location} onChange={e => {
+                    <Select displayEmpty  label="Location"  value={user?.Location ?? ''} onChange={e => {
                         const selectedLocation = e.target.value;
                         setUser(prev => ({...prev, Location: selectedLocation, FieldOfficer: locations[selectedLocation] || "" }))
                     }} >
-                        <MenuItem value=''>Location</MenuItem>
+                        
                         {Object.keys(locations).map(loc => (
                             <MenuItem key={loc} value={loc}>{loc}</MenuItem>
                             ))}
                     </Select>
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField  label="Assigned Field Officer" fullWidth InputProps={{readOnly: true}} value={user.FieldOfficer} onChange={e => setUser({...user, FieldOfficer: e.target.value})} />
+                    <TextField  label="Assigned Field Officer" fullWidth InputProps={{readOnly: true}} value={user?.FieldOfficer} onChange={e => setUser({...user, FieldOfficer: e.target.value})} />
                 </Grid>
                 
             </Grid>
