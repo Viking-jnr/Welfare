@@ -116,7 +116,7 @@ const Edit = ()=>{
                 </Button>
             </Stack>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid item >
                     <TextField label="Full Name" fullWidth value={user?.fullName}  required onChange={e => setUser(prev => ({...prev, fullName: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
