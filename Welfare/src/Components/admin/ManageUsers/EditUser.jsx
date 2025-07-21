@@ -85,7 +85,7 @@ const Edit = ()=>{
         const formData = new FormData();
         formData.append('fullName', user.fullName);
         formData.append('IDNo', user.IDno);
-        formData.append('PhoneNo', user.PhoneNO);
+        formData.append('PhoneNo', user.PhoneNo);
         formData.append('location', user.Location);
         formData.append('fieldOfficer', user.FieldOfficer);
         { user.ProfilePicture && formData.append('profile', user.ProfilePicture);}
@@ -120,13 +120,13 @@ const Edit = ()=>{
             </Stack>
             <Grid container spacing={2}>
                 <Grid item >
-                    <TextField label="Full Name" fullWidth value={user?.fullName}  required onChange={e => setUser(prev => ({...prev, fullName: e.target.value}))} />
+                    <TextField fullWidth value={user?.fullName}  required onChange={e => setUser(prev => ({...prev, fullName: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField label="National ID Number" fullWidth value={user?.IDno}  onChange={e => setUser(prev => ({...prev, IDno: e.target.value}))} />
+                    <TextField fullWidth value={user?.IDno}  onChange={e => setUser(prev => ({...prev, IDno: e.target.value}))} />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField  label="Phone No" fullWidth value={user?.PhoneNO} onChange={e => setUser(prev => ({...prev, PhoneNO: e.target.value})) }/>
+                    <TextField  fullWidth value={user?.PhoneNo} onChange={e => setUser(prev => ({...prev, PhoneNO: e.target.value})) }/>
                 </Grid>
                 <Grid item xs={12}>
                     <Select displayEmpty  label="Location"  value={user?.Location ?? ''} onChange={e => {
@@ -140,7 +140,7 @@ const Edit = ()=>{
                     </Select>
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField  label="Assigned Field Officer" fullWidth InputProps={{readOnly: true}} value={user?.FieldOfficer} onChange={e => setUser({...user, FieldOfficer: e.target.value})} />
+                    <TextField  fullWidth InputProps={{readOnly: true}} value={user?.FieldOfficer} onChange={e => setUser({...user, FieldOfficer: e.target.value})} />
                 </Grid>
                 
             </Grid>

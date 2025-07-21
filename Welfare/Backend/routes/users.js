@@ -52,11 +52,18 @@ router.post("/", upload.single("profile"), async (req, res) => {
   }
 });
 
-// Get all users
+// Get all users and their dependents if they have any
 router.get("/", async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM users');
-    res.json(result.rows);
+    const users = result.rows;
+    const usersDep = await db.query(`SELECT * FROM dependents where userID = ${users.id}`);
+    const dependents = usersDep.rows;
+    const userPlusDependents = users.map(user => {
+      return {... user, newDependent: dependents};
+    });
+    console.log("User with Dependents:", userPlusDependents);//Check if dependents are showing
+    res.json(userPlusDependents);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -97,14 +104,12 @@ router.put("/:id", upload.single("profile"), async (req, res) => {
 router.get("/:id", async (req, res) => {
   try{
   const userID = req.params.id;
-  console.log("Fetching user with ID", userID);// debug userID
   const result = await db.query("SELECT * FROM users where id =$1", [userID]);
 
   if (result.rows.length ===0){
     return res.status(404).json({error: "User Not Found"});
   }
 
-  console.log("Fetched User:", result.rows[0]); //view fetched user in log
 
   res.status(200).json(result.rows[0]);
   }catch(err){

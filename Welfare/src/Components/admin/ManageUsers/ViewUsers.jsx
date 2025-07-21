@@ -39,8 +39,8 @@ const View = () => {
     return(
         <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', gap: '60px'}}>
             <Typography variant='h3' sx={{color: 'blue'}}>Mjambere Welfare Users</Typography>
-             <TableContainer component={Paper}>
-            <Table  >
+             <TableContainer component={Paper} >
+            <Table size='small'  >
               <TableHead>
                 <TableRow>
                   <TableCell style={Styles.tableCell}><strong>Profile</strong></TableCell>
@@ -69,6 +69,12 @@ const View = () => {
                             <Button variant='contained' sx={{backgroundColor: 'rgba(248, 32, 32, 1)'}} onClick={() => handleDelete(user.id)}>
                                 Delete
                             </Button> 
+                        </TableCell>
+                        <TableCell>
+                            {user.FullName && (<Button variant='contained'>
+                               View Dependents
+                            </Button> 
+                            )}
                         </TableCell>
                     </TableRow>
                 ))}
