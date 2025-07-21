@@ -55,16 +55,20 @@ router.post("/", upload.single("profile"), async (req, res) => {
 // Get all users and their dependents if they have any
 router.get("/", async (req, res) => {
   try {
+    //Fetch all users
     const result = await db.query('SELECT * FROM users');
     const users = result.rows;
-    const usersDep = await db.query('SELECT * FROM dependents where dependents.userID = $1', [users.id]);
-    const dependents = usersDep.rows;
+    //Fetch all Dependents
+    const usersDep = await db.query('SELECT * FROM dependents');
+    const allDependents = usersDep.rows;
     const userPlusDependents = users.map(user => {
+      const dependents = allDependents.filter(dep => dep.userID === user.id); 
       return {... user, newDependent: dependents};
     });
     console.log("User with Dependents:", userPlusDependents);//Check if dependents are showing
     res.json(userPlusDependents);
   } catch (err) {
+    console.error("Error:", err)
     res.status(500).json(err);
   }
 });
