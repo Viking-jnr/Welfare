@@ -57,7 +57,7 @@ router.get("/", async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM users');
     const users = result.rows;
-    const usersDep = await db.query(`SELECT * FROM dependents where userID = ${users.id}`);
+    const usersDep = await db.query('SELECT * FROM dependents where dependents.userID = $1', [users.id]);
     const dependents = usersDep.rows;
     const userPlusDependents = users.map(user => {
       return {... user, newDependent: dependents};

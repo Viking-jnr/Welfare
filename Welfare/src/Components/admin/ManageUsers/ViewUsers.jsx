@@ -12,6 +12,11 @@ const Styles = {
 
 const View = () => {
     const navigate = useNavigate();
+    // to extend a user who has dependents
+    const[extendUser, setExtendUser] = useState(null);
+    const handleExtend = (userID) => {
+        setExtendUser(prev => {})
+    }
     {/*Component to view all users*/}
     const [viewUser, setViewUser] = useState([]);
     useEffect (() => {
