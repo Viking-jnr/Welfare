@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Avatar, Box, Button, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Avatar, Box, Button, Collapse, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 //Styled Components
@@ -15,7 +15,7 @@ const View = () => {
     // to extend a user who has dependents
     const[extendUser, setExtendUser] = useState(null);
     const handleExtend = (userID) => {
-        setExtendUser(prev => {})
+        setExtendUser(prev => (prev === userID ? null : userID));
     }
     {/*Component to view all users*/}
     const [viewUser, setViewUser] = useState([]);
@@ -58,7 +58,8 @@ const View = () => {
               </TableHead>
               <TableBody>
                 {viewUser.map((user) => (
-                    <TableRow key={user.id}>
+                    <React.Fragment key={user.id}>
+                    <TableRow >
                         <TableCell><Avatar src={user.profilePic_URL} /> </TableCell>
                         <TableCell>{user.FullName}</TableCell>
                         <TableCell>{user.IDNo}</TableCell>
@@ -76,12 +77,28 @@ const View = () => {
                             </Button> 
                         </TableCell>
                         <TableCell>
-                            {user.FullName && (<Button variant='contained'>
-                               View Dependents
-                            </Button> 
+                            {user.newDependent && user.newDependent.length >0 && (
+                                <Button variant='contained' onClick={() => handleExtend(user.id)}>
+                                    {extendUser === user.id ? "Hide Dependents" : "View Dependents"}
+                                </Button> 
                             )}
                         </TableCell>
                     </TableRow>
+                    <TableRow>
+                        <TableCell colSpan={7}>
+                            <Collapse in={extendUser === user.id} timeout={'auto'} unmountOnExit>
+                            <Table size= 'small'>
+                                <TableHead>
+                                    <TableCell><strong>Name</strong></TableCell>
+                                    <TableCell><strong>Relationship</strong></TableCell>
+                                    <TableCell><strong>Date of Birth</strong></TableCell>
+                                    <TableCell><strong>National ID</strong></TableCell>
+                                </TableHead>
+                            </Table>
+                            </Collapse>
+                        </TableCell>
+                    </TableRow>
+                    </React.Fragment>
                 ))}
               </TableBody>
             </Table>
